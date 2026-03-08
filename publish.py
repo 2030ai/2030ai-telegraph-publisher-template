@@ -14,12 +14,34 @@ import argparse
 import json
 import os
 import re
+import ssl
 import sys
 import urllib.error
 import urllib.parse
 import urllib.request
 from html.parser import HTMLParser
 from pathlib import Path
+
+
+def _make_ssl_context() -> ssl.SSLContext:
+    """Create SSL context, falling back to certifi if system certs are missing."""
+    ctx = ssl.create_default_context()
+    try:
+        # Test if default certs work
+        ctx.load_default_certs()
+    except Exception:
+        pass
+    # If no CA certs loaded, try certifi
+    if ctx.cert_store_stats()["x509_ca"] == 0:
+        try:
+            import certifi
+            ctx.load_verify_locations(certifi.where())
+        except ImportError:
+            pass
+    return ctx
+
+
+_ssl_ctx = _make_ssl_context()
 
 API_BASE = "https://api.telegra.ph"
 TOKEN_PATH = Path(__file__).parent / "token.txt"
@@ -401,7 +423,7 @@ def upload_image(file_path: str) -> str:
         data=body,
         headers={"Content-Type": f"multipart/form-data; boundary={boundary}"},
     )
-    with urllib.request.urlopen(req, timeout=30) as resp:
+    with urllib.request.urlopen(req, timeout=30, context=_ssl_ctx) as resp:
         result = json.loads(resp.read())
 
     if isinstance(result, list) and result:
@@ -502,7 +524,7 @@ def api_call(method: str, **params) -> dict:
         {k: v if isinstance(v, str) else json.dumps(v) for k, v in params.items() if v is not None}
     ).encode()
     req = urllib.request.Request(f"{API_BASE}/{method}", data=data)
-    with urllib.request.urlopen(req, timeout=30) as resp:
+    with urllib.request.urlopen(req, timeout=30, context=_ssl_ctx) as resp:
         result = json.loads(resp.read())
     if not result.get("ok"):
         raise RuntimeError(result.get("error", "Unknown Telegraph API error"))
