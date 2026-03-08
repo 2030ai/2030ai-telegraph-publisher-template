@@ -110,12 +110,16 @@ class _NodeBuilder(HTMLParser):
         tag = HEADING_MAP.get(tag, tag)
         if tag in PASSTHROUGH_TAGS:
             return  # children go to current parent
-        if tag in ("br", "hr"):
-            self._stack[-1].append({"tag": tag})
+        if tag in ("br", "hr", "img"):
+            node: dict = {"tag": tag}
+            for k, v in attrs:
+                if k in ("href", "src") and v:
+                    node.setdefault("attrs", {})[k] = v
+            self._stack[-1].append(node)
             return
         if tag not in TELEGRAPH_TAGS:
             return  # skip unsupported
-        node: dict = {"tag": tag}
+        node = {"tag": tag}
         attr_dict = {}
         for k, v in attrs:
             if k in ("href", "src") and v:
@@ -146,7 +150,7 @@ class _NodeBuilder(HTMLParser):
             return
 
         tag = HEADING_MAP.get(tag, tag)
-        if tag in PASSTHROUGH_TAGS or tag in ("br", "hr"):
+        if tag in PASSTHROUGH_TAGS or tag in ("br", "hr", "img"):
             return
         if tag not in TELEGRAPH_TAGS:
             return
@@ -341,6 +345,8 @@ def _close_list(parts: list, tag: str | None):
 
 def _inline(text: str) -> str:
     """Convert inline Markdown to HTML."""
+    # Escape literal HTML first so <div> etc. render as text, not tags
+    text = text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
     text = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", text)
     text = re.sub(r"__(.+?)__", r"<b>\1</b>", text)
     text = re.sub(r"\*(.+?)\*", r"<i>\1</i>", text)
@@ -407,16 +413,57 @@ def upload_image(file_path: str) -> str:
 
 # ── Auto-split ───────────────────────────────────────────────────────
 
+def _split_large_node(node: dict, max_bytes: int) -> list:
+    """Split an oversized node (typically <pre>) into smaller nodes by lines."""
+    tag = node.get("tag", "")
+    children = node.get("children", [])
+    attrs = node.get("attrs")
+
+    if tag in ("pre", "code") and len(children) == 1 and isinstance(children[0], str):
+        lines = children[0].split("\n")
+        parts: list[dict] = []
+        current_lines: list[str] = []
+        for line in lines:
+            current_lines.append(line)
+            test: dict = {"tag": tag, "children": ["\n".join(current_lines)]}
+            if attrs:
+                test["attrs"] = attrs
+            if len(json.dumps(test).encode()) > max_bytes - 200:
+                current_lines.pop()
+                if current_lines:
+                    n: dict = {"tag": tag, "children": ["\n".join(current_lines)]}
+                    if attrs:
+                        n["attrs"] = attrs
+                    parts.append(n)
+                current_lines = [line]
+        if current_lines:
+            n = {"tag": tag, "children": ["\n".join(current_lines)]}
+            if attrs:
+                n["attrs"] = attrs
+            parts.append(n)
+        return parts if parts else [node]
+
+    return [node]
+
+
 def _split_nodes(nodes: list, max_bytes: int = 60_000) -> list[list]:
     """Split node list into chunks fitting within max_bytes when serialized."""
-    if len(json.dumps(nodes).encode()) <= max_bytes:
-        return [nodes]
+    # First pass: expand any single oversized nodes
+    expanded: list = []
+    for node in nodes:
+        if isinstance(node, dict) and len(json.dumps(node).encode()) > max_bytes:
+            expanded.extend(_split_large_node(node, max_bytes))
+        else:
+            expanded.append(node)
+
+    if len(json.dumps(expanded).encode()) <= max_bytes:
+        return [expanded]
 
     chunks = []
     current: list = []
     current_size = 2  # for '[]'
 
-    for node in nodes:
+    for node in expanded:
         node_size = len(json.dumps(node).encode()) + 1  # +1 for comma
         if current and current_size + node_size > max_bytes:
             chunks.append(current)
@@ -558,7 +605,7 @@ def main():
 
     try:
         if args.command == "create":
-            content = Path(args.file).read_text() if args.file else sys.stdin.read()
+            content = Path(args.file).read_text(encoding="utf-8") if args.file else sys.stdin.read()
             fmt = detect_format(args.file, args.format)
             nodes = convert_content(content, fmt)
 
@@ -611,23 +658,71 @@ def main():
                 }))
 
         elif args.command == "edit":
-            content = Path(args.file).read_text() if args.file else sys.stdin.read()
+            content = Path(args.file).read_text(encoding="utf-8") if args.file else sys.stdin.read()
             fmt = detect_format(args.file, args.format)
             nodes = convert_content(content, fmt)
             token = ensure_token()
-            edit_params = dict(
-                access_token=token,
-                path=args.path,
-                title=args.title,
-                content=nodes,
-                return_content="false",
-            )
-            if args.author_name:
-                edit_params["author_name"] = args.author_name
-            if args.author_url:
-                edit_params["author_url"] = args.author_url
-            page = api_call("editPage", **edit_params)
-            print(json.dumps({"ok": True, "url": page["url"], "path": page["path"]}))
+            chunks = _split_nodes(nodes)
+
+            if len(chunks) == 1:
+                edit_params = dict(
+                    access_token=token,
+                    path=args.path,
+                    title=args.title,
+                    content=chunks[0],
+                    return_content="false",
+                )
+                if args.author_name:
+                    edit_params["author_name"] = args.author_name
+                if args.author_url:
+                    edit_params["author_url"] = args.author_url
+                page = api_call("editPage", **edit_params)
+                print(json.dumps({"ok": True, "url": page["url"], "path": page["path"]}))
+            else:
+                # Multi-part: edit original page as part 1, create rest
+                pages = []
+                first_title = f"{args.title} (1/{len(chunks)})"
+                edit_params = dict(
+                    access_token=token,
+                    path=args.path,
+                    title=first_title,
+                    content=chunks[0],
+                    return_content="false",
+                )
+                if args.author_name:
+                    edit_params["author_name"] = args.author_name
+                if args.author_url:
+                    edit_params["author_url"] = args.author_url
+                page = api_call("editPage", **edit_params)
+                pages.append(page)
+                for idx, chunk in enumerate(chunks[1:], 2):
+                    part_title = f"{args.title} ({idx}/{len(chunks)})"
+                    page = api_call(
+                        "createPage",
+                        access_token=token,
+                        title=part_title,
+                        content=chunk,
+                        author_name=args.author_name,
+                        return_content="false",
+                    )
+                    pages.append(page)
+                urls = [p["url"] for p in pages]
+                _add_nav_links(chunks, urls)
+                for idx, page in enumerate(pages):
+                    api_call(
+                        "editPage",
+                        access_token=token,
+                        path=page["path"],
+                        title=page["title"],
+                        content=chunks[idx],
+                        return_content="false",
+                    )
+                print(json.dumps({
+                    "ok": True,
+                    "parts": len(pages),
+                    "url": pages[0]["url"],
+                    "urls": urls,
+                }))
 
         elif args.command == "get":
             page = api_call(
