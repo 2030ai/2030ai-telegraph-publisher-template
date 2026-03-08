@@ -104,14 +104,34 @@ CONTENT
 
 ## Typography guidelines
 
-Telegraph pages look best when clean and minimal. Avoid visual clutter:
+Telegraph pages should feel like a well-designed article, not a raw dump. Key principles:
 
-- **One h3** at most for a section title. Use h4 sparingly for subsections only.
-- **Minimal inline formatting** — don't stack bold + italic + code in one sentence.
-- **Tables** render as monospace `<pre>` blocks with box-drawing borders — they look clean, use freely.
-- **Short paragraphs** — 2-4 sentences each. Break up walls of text.
-- Don't wrap entire paragraphs in bold or italic.
-- Prefer lists over long comma-separated enumerations.
+### Structure and rhythm
+
+- **Don't repeat the title** in content. Telegraph shows `--title` as a large h1 automatically. Starting content with `# Same Title` creates an ugly duplicate.
+- **Use h3 sparingly** — only for major sections (2-4 per page). For subsections, use **bold text** at the start of a paragraph instead of h4.
+- **Add `---` (horizontal rules)** between major sections to create visual breathing room.
+- **Start with a lead paragraph** — 1-2 sentences that hook the reader. No heading before it.
+
+### Visual variety
+
+- **Alternate block types** — don't stack 5 bullet lists in a row. Mix paragraphs, lists, blockquotes, code blocks, tables.
+- **Use `>` blockquotes** for key takeaways, important notes, or TL;DR summaries. They stand out visually.
+- **Bold key terms** in running text to create scan points. But don't bold entire sentences.
+- **Short paragraphs** — 2-3 sentences max. One idea per paragraph.
+
+### Tables
+
+- Tables render as monospace `<pre>` with box-drawing borders — they look clean, use freely.
+- **Escape `|` in cell content** — a literal `|` inside a cell breaks column parsing. Avoid pipes in table data.
+- Keep tables compact: short column headers, concise values.
+
+### What NOT to do
+
+- Don't create walls of same-level headings (h3, h3, h3, h3, h3...)
+- Don't put every detail in bullet points — use prose for context, lists for enumerations
+- Don't use `<code>` for regular words that aren't code
+- Don't generate content that looks like a README — Telegraph is for readable articles
 
 ## Output
 
