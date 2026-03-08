@@ -7,8 +7,8 @@ Publish anything to [telegra.ph](https://telegra.ph) from the command line or [C
 ## Install
 
 ```bash
-git clone https://github.com/2030ai/telegraph-publisher-template.git
-cd telegraph-publisher-template
+git clone https://github.com/2030ai/2030ai-telegraph-publisher-template.git
+cd 2030ai-telegraph-publisher-template
 chmod +x install.sh
 ./install.sh
 ```
