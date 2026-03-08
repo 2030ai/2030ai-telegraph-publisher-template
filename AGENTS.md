@@ -14,14 +14,13 @@ CLI-инструмент + Claude Code skill для публикации кон�
 ## Назначение и границы
 
 AGENTS.md содержит универсальные правила. Специфические инструкции — в agent_docs/.
-Карта документов: [agent_docs/index.md](agent_docs/index.md).
 
 ## Инициализация задачи
 
 Перед началом работы агент должен:
 1. Прочитать описание проекта выше
 2. Прочитать последние 10 записей в [agent_docs/development-history.md](agent_docs/development-history.md)
-3. Прочитать релевантные документы из [agent_docs/index.md](agent_docs/index.md)
+3. Прочитать релевантные документы из agent_docs/
 
 ## Ключевые файлы
 
@@ -53,4 +52,4 @@ AGENTS.md содержит универсальные правила. Специ
 - [ ] Тесты проходят (`python3 -m unittest test_publish -v`)
 - [ ] Документация обновлена
 - [ ] Запись добавлена в development-history.md
-- [ ] Проверен DoD ([agent_docs/guides/dod.md](agent_docs/guides/dod.md))
+- [ ] Проверены conventions выше

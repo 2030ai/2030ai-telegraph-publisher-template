@@ -1,7 +1,5 @@
 # Architecture Decision Records
 
-Шаблон: [templates/adr.md](templates/adr.md)
-
 ---
 
 ## ADR-001: Stdlib only, zero dependencies
