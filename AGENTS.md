@@ -17,3 +17,7 @@ Single Python file (`publish.py`), stdlib only, zero external dependencies.
 - JSON output on stdout, diagnostics on stderr
 - Token auto-created on first use, stored in `~/.claude/telegraph/token.txt`
 - Pipe-friendly: content via stdin or `--file`
+- Format auto-detected from file extension (`.md` → markdown, `.html` → html, `.txt` → text)
+- HTML `<table>` and Markdown pipe tables → monospace `<pre>` with box-drawing borders
+- Content > 64KB auto-split into linked multi-part pages
+- Image upload via `upload` command (Telegraph file hosting, no token required)
