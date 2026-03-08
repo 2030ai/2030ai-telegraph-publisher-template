@@ -29,7 +29,24 @@
 - [x] AGENTS.md
 - [x] README.md
 
-**Следующие шаги:** Создание agent_docs скелета, публикация.
+**Следующие шаги:** —
+
+---
+
+## 2026-03-08 — agent_docs и чистка
+
+**Что сделано:**
+- Создан скелет agent_docs/: architecture, adr (3 записи), development-history, guides
+- AGENTS.md реструктурирован: описание проекта, протокол инициализации, чеклист
+- Удалены templates/, index.md, dod.md (избыточны для маленького проекта)
+- Удалён install.sh (заменён промптом в README)
+
+**Почему:** Приведение проекта к шаблону 2030ai_project_template.
+
+**Обновлено:**
+- [x] agent_docs/ (новый)
+- [x] AGENTS.md
+- [x] CLAUDE.md
 
 ---
 
@@ -42,12 +59,10 @@
 - Markdown-конвертер: headings, bold, italic, code, lists, blockquotes, links, images
 - HTML-конвертер: heading remap, passthrough tags, attribute preservation
 - Автосоздание Telegraph-аккаунта при первом использовании
-- install.sh для установки в ~/.claude/
 
 **Почему:** Решение проблемы шеринга контента из Claude Code.
 
 **Обновлено:**
 - [x] publish.py (новый)
 - [x] skill.md (новый)
-- [x] install.sh (новый)
 - [x] README.md (новый)

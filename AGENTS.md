@@ -27,7 +27,6 @@ AGENTS.md содержит универсальные правила. Специ
 - `publish.py` — main CLI script (HTML/Markdown/text → Telegraph nodes → API)
 - `test_publish.py` — unit tests (51 тест)
 - `.claude/skills/telegraph/skill.md` — Claude Code skill с триггерами и workflow
-- `install.sh` — installs to `~/.claude/` for global availability
 
 ## Conventions
 
