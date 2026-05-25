@@ -15,9 +15,9 @@
 
 ## Установка
 
-Вставьте этот промпт в Claude Code:
+Вставьте этот промпт в Claude Code / Codex:
 
-> Скачай два файла из репозитория github.com/2030ai/2030ai-telegraph-publisher-template: файл `publish.py` сохрани в `~/.claude/telegraph/publish.py`, а файл `.claude/skills/telegraph/skill.md` сохрани в `~/.claude/skills/telegraph/skill.md`. Создай директории, если их нет.
+> Скачай файлы из репозитория github.com/2030ai/2030ai-telegraph-publisher-template: файл `publish.py` сохрани в `~/.claude/telegraph/publish.py`, а skill manifest `.agents/skills/telegraph/SKILL.md` сохрани как canonical source в `.agents/skills/telegraph/SKILL.md` текущего проекта. Создай symlink mirrors: `.claude/skills/telegraph`, `.codex/skills/telegraph`, `.cursor/skills/telegraph` → `../../.agents/skills/telegraph`.
 
 После этого скилл готов к работе. Токен Telegraph создастся автоматически при первой публикации.
 
@@ -70,7 +70,7 @@ Telegraph поддерживает ограниченный набор HTML-те
 
 ## Токен
 
-Хранится в `~/.claude/telegraph/token.txt`. Создаётся автоматически при первом запуске.
+Хранится рядом с `publish.py`. При установке по инструкции выше это `~/.claude/telegraph/token.txt`. Создаётся автоматически при первом запуске.
 
 Если хотите использовать свой токен, задайте переменную окружения:
 
