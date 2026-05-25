@@ -4,6 +4,23 @@
 
 ---
 
+## 2026-05-25 — Modern Claude Code skill layout
+
+**Что сделано:**
+- Добавлен canonical skill `.agents/skills/telegraph/SKILL.md`.
+- Добавлены platform mirrors `.claude/skills/`, `.codex/skills/`, `.cursor/skills/`.
+- Документация обновлена с uppercase `SKILL.md` и `.agents` source of truth.
+
+**Почему:** Приведение публичного шаблона к актуальной Claude Code/Codex/Cursor skill layout.
+
+**Обновлено:**
+- [x] `.agents/skills/telegraph/SKILL.md`
+- [x] README.md
+- [x] AGENTS.md
+- [x] agent_docs/guides/environment-setup.md
+
+---
+
 ## 2026-03-08 — Расширение функциональности и тесты
 
 **Что сделано:**
@@ -25,7 +42,7 @@
 **Обновлено:**
 - [x] publish.py
 - [x] test_publish.py (новый)
-- [x] skill.md
+- [x] SKILL.md
 - [x] AGENTS.md
 - [x] README.md
 
@@ -64,5 +81,5 @@
 
 **Обновлено:**
 - [x] publish.py (новый)
-- [x] skill.md (новый)
+- [x] SKILL.md (новый)
 - [x] README.md (новый)

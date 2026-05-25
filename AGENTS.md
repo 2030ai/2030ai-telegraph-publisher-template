@@ -26,7 +26,8 @@ AGENTS.md содержит универсальные правила. Специ
 
 - `publish.py` — main CLI script (HTML/Markdown/text → Telegraph nodes → API)
 - `test_publish.py` — unit tests (51 тест)
-- `.claude/skills/telegraph/skill.md` — Claude Code skill с триггерами и workflow
+- `.agents/skills/telegraph/SKILL.md` — canonical project-local skill
+- `.claude/skills/telegraph`, `.codex/skills/telegraph`, `.cursor/skills/telegraph` — platform symlink mirrors
 
 ## Conventions
 
