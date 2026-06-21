@@ -1,0 +1,66 @@
+name: markdownlint
+
+on:
+  pull_request:
+    paths:
+      - CLAUDE.md
+      - .markdownlint.json
+      - .github/workflows/markdownlint.yml
+      - 'agent_docs/adr/2026-06-16-1249-atomic-event-documents.md'
+      - 'agent_docs/adr/README.md'
+      - 'agent_docs/development-history/**.md'
+      - 'agent_docs/glossary.md'
+      - 'agent_docs/guides/archiving-and-temp.md'
+      - 'agent_docs/guides/atomic-documents.md'
+      - 'agent_docs/guides/claude-code.md'
+      - 'agent_docs/guides/dod.md'
+      - 'agent_docs/guides/environment-setup.md'
+      - 'agent_docs/guides/logging.md'
+      - 'agent_docs/templates/**.md'
+  push:
+    branches: [main]
+    paths:
+      - CLAUDE.md
+      - .markdownlint.json
+      - .github/workflows/markdownlint.yml
+      - 'agent_docs/adr/2026-06-16-1249-atomic-event-documents.md'
+      - 'agent_docs/adr/README.md'
+      - 'agent_docs/development-history/**.md'
+      - 'agent_docs/glossary.md'
+      - 'agent_docs/guides/archiving-and-temp.md'
+      - 'agent_docs/guides/atomic-documents.md'
+      - 'agent_docs/guides/claude-code.md'
+      - 'agent_docs/guides/dod.md'
+      - 'agent_docs/guides/environment-setup.md'
+      - 'agent_docs/guides/logging.md'
+      - 'agent_docs/templates/**.md'
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DavidAnson/markdownlint-cli2-action@v23
+        with:
+          globs: |
+            CLAUDE.md
+            agent_docs/adr/2026-06-16-1249-atomic-event-documents.md
+            agent_docs/adr/README.md
+            agent_docs/development-history/2026-06-16-1249-atomic-event-documents.md
+            agent_docs/development-history/2026-06-17-1143-template-source-cleanup.md
+            agent_docs/development-history/2026-06-21-project-template-sync.md
+            agent_docs/development-history/2026-06-21-markdownlint-scope.md
+            agent_docs/development-history/README.md
+            agent_docs/glossary.md
+            agent_docs/guides/archiving-and-temp.md
+            agent_docs/guides/atomic-documents.md
+            agent_docs/guides/claude-code.md
+            agent_docs/guides/dod.md
+            agent_docs/guides/environment-setup.md
+            agent_docs/guides/logging.md
+            agent_docs/templates/adr.md
+            agent_docs/templates/architecture.md
+            agent_docs/templates/development-history.md
