@@ -1,12 +1,12 @@
 ---
 name: telegraph
-description: "Publish Markdown, HTML, plain text, and images to telegra.ph through the local publish.py helper. Use when the user asks to publish content on Telegraph, create a telegra.ph link, update an existing Telegraph page, list Telegraph pages, or upload an image to Telegraph CDN."
+description: "/telegraph — Publish Markdown, HTML, plain text, and images to telegra.ph through the local publish.py helper. Use when the user asks to publish content on Telegraph, create a telegra.ph link, update an existing Telegraph page, list Telegraph pages, or upload an image to Telegraph CDN."
 when_to_use: "Use when the user asks: опубликуй на телеграф, publish to telegraph, сделай ссылку на telegra.ph, update a Telegraph page, list my Telegraph pages, or upload an image to Telegraph."
 argument-hint: "[create|edit|get|list|upload] [title/path/file]"
 disable-model-invocation: true
 ---
 
-# Telegraph Publisher
+# /telegraph
 
 Publish user-approved content to telegra.ph with the repository helper `publish.py`.
 

@@ -1,0 +1,9 @@
+name: telegraph
+display_name: "/telegraph"
+description: "/telegraph — Publish Markdown, HTML, plain text, and images to telegra.ph through the local publish.py helper. Use when the user asks to publish content on Telegraph, create a telegra.ph link, update an existing Telegraph page, list Telegraph pages, or upload an image to Telegraph CDN."
+short_description: "Publish Markdown, HTML, plain text, and images to telegra.ph through the local publish.py helper"
+default_prompt: "Use /telegraph for this workflow."
+interface:
+  display_name: "/telegraph"
+  short_description: "Local project skill /telegraph"
+  default_prompt: "Use $telegraph for this local project workflow."
