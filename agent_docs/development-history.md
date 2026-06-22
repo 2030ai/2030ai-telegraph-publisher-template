@@ -4,6 +4,20 @@
 
 ---
 
+## 2026-06-22 — Skill command-name metadata
+
+**Что сделано:**
+- Skill `/telegraph` нормализован: `name`, description и H1 совпадают со slash-командой.
+- Добавлен `agents/openai.yaml` с `display_name: "/telegraph"`.
+
+**Почему:** Название skill в UI должно совпадать с командой, которую вводит пользователь.
+
+**Обновлено:**
+- [x] `.agents/skills/telegraph/SKILL.md`
+- [x] `.agents/skills/telegraph/agents/openai.yaml`
+
+---
+
 ## 2026-05-25 — Modern Claude Code skill layout
 
 **Что сделано:**
